@@ -11,7 +11,8 @@ using namespace std;
 template <class elemType>
 class sLinkList:public list<elemType>
 {
-    friend sLinkList operator+(const sLinkList &a, const sLinkList &b); //把a和b相连成为c
+    
+    template <class T> friend sLinkList<T> operator+(const sLinkList<T> &a, const sLinkList<T> &b); //把a和b相连成为c
 private:
     struct node
     {
@@ -206,7 +207,7 @@ int main() {
     list.traverse();
     sLinkList<int> b(list);
     b.traverse();
-    //    b = list + list;
-    //    b.traverse();
+        b = list + list;
+        b.traverse();
     return 0;
 }
