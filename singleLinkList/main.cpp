@@ -13,6 +13,7 @@ class sLinkList:public list<elemType>
 {
     
     template <class T> friend sLinkList<T> operator+(const sLinkList<T> &a, const sLinkList<T> &b); //把a和b相连成为c
+    
 private:
     struct node
     {
@@ -33,6 +34,7 @@ private:
     node *move(int i) const;//返回第i个节点的地址
     
 public:
+    sLinkList<elemType>& operator=(const sLinkList<elemType> &obj);
     sLinkList();
     sLinkList(sLinkList<elemType>& obj);
     ~sLinkList()
@@ -53,15 +55,26 @@ public:
 };
 
 template <class elemType>
-sLinkList<elemType> operator+(const sLinkList<elemType> &a, const sLinkList<elemType> &b)
+sLinkList<elemType>& sLinkList<elemType>::operator=(const sLinkList<elemType> &obj)
 {
-    sLinkList<elemType> c;
+    if (this==&obj) return *this;   //防止自己复制自己
+    this->clear();
+    for (int i=0; i<obj.currentLength; ++i)
+    {
+        this->insert(i, obj.visit(i));
+    }
+    return *this;
+}
+
+template <class T>
+sLinkList<T> operator+(const sLinkList<T> &a, const sLinkList<T> &b)
+{
+    sLinkList<T> c;
     for (int i=0; i<a.currentLength; ++i)
         c.insert(i, a.visit(i));
     for (int i=0; i<b.currentLength; ++i)
         c.insert(i + a.currentLength, b.visit(i));
     return c;
-    
 }
 
 template <class elemType>
@@ -186,7 +199,6 @@ void sLinkList<elemType>::reverse()
     for (int i=0 ; i<currentLength; ++i)
     {
         storage[i] = visit(i);
-        cout<<storage[i]<<' ';
     }
     for (int i=0; i<currentLength; ++i)
     {
@@ -199,7 +211,7 @@ int main() {
     std::cout << "Hello, World!" << std::endl;
     sLinkList<int> list;
     for (int i=0; i<10; ++i)
-        list.insert(i, i);
+        list.insert(i, i+1);
     list.traverse();
     list.erase(2, 5);
     list.traverse();
@@ -207,7 +219,7 @@ int main() {
     list.traverse();
     sLinkList<int> b(list);
     b.traverse();
-        b = list + list;
-        b.traverse();
+    b= list + list;
+    b.traverse();
     return 0;
 }
